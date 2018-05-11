@@ -3,7 +3,7 @@ const Cache = require('../models/cache.model');
 const moment = require('moment');
 const httpStatus = require('http-status');
 
-exports.createEntry = async (req, res) => {
+exports.createEntry = async (req, res, next) => {
   const {key, value, ttl} = req.body;
   const cache = new Cache({
     key,
@@ -16,8 +16,7 @@ exports.createEntry = async (req, res) => {
       res.status(httpStatus.CREATED);
       res.json({cache});
     } else {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR);
-      res.json({message: `Error: ${err}`});
+      next(err);
     }
   });
 };
@@ -25,19 +24,18 @@ exports.createEntry = async (req, res) => {
 exports.getAllEntry = async (req, res) => {
   const query = Cache.find({});
 
-  query.exec((err, caches) => {
+  query.exec((err, caches, next) => {
     if (err) {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR);
-      res.json({message: `Error: ${err}`});
+      next(err);
       return;
     }
 
     res.status(httpStatus.OK);
-    res.json({caches});
+    res.json({ caches });
   });
 };
 
-exports.getValueFromKey = async (req, res) => {
+exports.getValueFromKey = async (req, res, next) => {
   const { key } = req.params;
 
   Cache.findOne({ key }, (err, cache) => {
@@ -53,8 +51,7 @@ exports.getValueFromKey = async (req, res) => {
             value: newCacheEntry.value,
           });
         } else {
-          res.status(httpStatus.INTERNAL_SERVER_ERROR);
-          res.json({message: `Error: ${err}` });
+          next(error);
         }
       });
     } else {
@@ -72,8 +69,7 @@ exports.getValueFromKey = async (req, res) => {
 
           Cache.findOneAndUpdate({ key }, { value: cache.value }, (error, cache) => {
             if (error) {
-              res.status(httpStatus.INTERNAL_SERVER_ERROR);
-              res.json({message: `Error:${err}`});
+              next(error);
             } else {
               res.status(httpStatus.OK);
               res.json({ value: cache.value });
@@ -88,20 +84,19 @@ exports.getValueFromKey = async (req, res) => {
   });
 };
 
-exports.deleteAllEntry = async (req, res) => {
+exports.deleteAllEntry = async (req, res, next) => {
   Cache.deleteMany({}, (err) => {
     if (!err) {
       res.status(httpStatus.NO_CONTENT);
       res.json({});
     } else {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR);
-      res.json({ message: `Error: ${err}` });
+      next(err);
     }
   });
 };
 
 
-exports.deleteParticularEntry = async (req, res) => {
+exports.deleteParticularEntry = async (req, res, next) => {
   const { key } = req.params;
 
   Cache.deleteOne({ key }, (err) => {
@@ -109,8 +104,7 @@ exports.deleteParticularEntry = async (req, res) => {
       res.status(httpStatus.NO_CONTENT);
       res.json({});
     } else {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR);
-      res.json({ message: `Error: ${err}` });
+      next(err);
     }
   });
 };
