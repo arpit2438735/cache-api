@@ -36,4 +36,11 @@ router.delete('/', controller.deleteAllEntry);
  */
 router.delete('/:key', controller.deleteParticularEntry);
 
+/**
+ * @api {put} v1/cache/:key e.g. v1/cache/foo
+ * @apiDescription Updates an entry in the cache for given key.
+ * @apiParam {string} value.
+ */
+router.put('/:key', controller.updateParticularEntry);
+
 module.exports = router;

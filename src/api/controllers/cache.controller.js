@@ -114,3 +114,22 @@ exports.deleteParticularEntry = async (req, res) => {
     }
   });
 };
+
+exports.updateParticularEntry = async (req, res, next) => {
+  const { key } = req.params;
+  const { value } = req.body;
+
+  Cache.findOneAndUpdate({ key }, { value }, (err, cache) => {
+    if (!err) {
+      if (cache === null) {
+        res.status(httpStatus.NOT_FOUND);
+        res.json({ message: 'Cache entry not found' });
+      } else {
+        res.status(httpStatus.NO_CONTENT);
+        res.json({});
+      }
+    } else {
+      next(err);
+    }
+  });
+};
