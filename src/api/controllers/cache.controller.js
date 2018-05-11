@@ -73,7 +73,7 @@ exports.getValueFromKey = async (req, res) => {
           Cache.findOneAndUpdate({ key }, { value: cache.value }, (error, cache) => {
             if (error) {
               res.status(httpStatus.INTERNAL_SERVER_ERROR);
-              res.json(`Error:${err}`);
+              res.json({message: `Error:${err}`});
             } else {
               res.status(httpStatus.OK);
               res.json({ value: cache.value });
@@ -84,6 +84,33 @@ exports.getValueFromKey = async (req, res) => {
           res.json({ value: cache.value });
         }
       }
+    }
+  });
+};
+
+exports.deleteAllEntry = async (req, res) => {
+  Cache.deleteMany({}, (err) => {
+    if (!err) {
+      res.status(httpStatus.NO_CONTENT);
+      res.json({});
+    } else {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR);
+      res.json({ message: `Error: ${err}` });
+    }
+  });
+};
+
+
+exports.deleteParticularEntry = async (req, res) => {
+  const { key } = req.params;
+
+  Cache.deleteOne({ key }, (err) => {
+    if (!err) {
+      res.status(httpStatus.NO_CONTENT);
+      res.json({});
+    } else {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR);
+      res.json({ message: `Error: ${err}` });
     }
   });
 };

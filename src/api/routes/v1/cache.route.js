@@ -24,4 +24,16 @@ router.get('/', controller.getAllEntry);
  */
 router.get('/:key', controller.getValueFromKey);
 
+/**
+ * @api {delete} v1/cache
+ * @apiDescription Delete all entry
+ */
+router.delete('/', controller.deleteAllEntry);
+
+/**
+ * @api {delete} v1/cache/:key
+ * @apiDescription Delete particular cache entry
+ */
+router.delete('/:key', controller.deleteParticularEntry);
+
 module.exports = router;
