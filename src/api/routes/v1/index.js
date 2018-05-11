@@ -1,4 +1,5 @@
 const express = require('express');
+const cacheRoute = require('./cache.route');
 
 const router = express.Router();
 
@@ -7,9 +8,6 @@ const router = express.Router();
  */
 router.get('/status', (req, res) => res.send('OK'));
 
-/**
- * GET v1/docs
- */
-
+router.use('/cache', cacheRoute);
 
 module.exports = router;
