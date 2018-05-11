@@ -18,4 +18,10 @@ router.post('/', controller.createEntry);
  */
 router.get('/', controller.getAllEntry);
 
+/**
+ * @api {get} v1/cache/:key
+ * @apiDescription Get entry for particular key
+ */
+router.get('/:key', controller.getValueFromKey);
+
 module.exports = router;
