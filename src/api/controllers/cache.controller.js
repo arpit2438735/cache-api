@@ -1,7 +1,7 @@
-// Local imports
-const Cache = require('../models/cache.model');
 const moment = require('moment');
+
 const httpStatus = require('http-status');
+const Cache = require('../models/cache.model');
 
 exports.createEntry = async (req, res, next) => {
   const {key, value, ttl} = req.body;
